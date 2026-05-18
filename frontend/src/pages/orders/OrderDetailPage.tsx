@@ -236,7 +236,7 @@ export default function OrderDetailPage() {
                   </div>
                   <div className="text-right">
                     <p className="font-semibold text-primary-900">{formatPrice(line.total_price)}</p>
-                    <p className="text-sm text-primary-500">{formatPrice(line.unit_price)}/{line.rental_period_type || 'day'}</p>
+                    <p className="text-sm text-primary-500">{formatPrice(line.unitPrice)}/{line.rental_period_type || 'day'}</p>
                   </div>
                 </div>
               ))}
@@ -290,7 +290,7 @@ export default function OrderDetailPage() {
               </div>
               <div className="flex justify-between">
                 <span className="text-primary-600">Tax (18% GST)</span>
-                <span className="text-primary-900">{formatPrice(order.tax_amount || 0)}</span>
+                <span className="text-primary-900">{formatPrice(order.taxAmount || 0)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-primary-600">Security Deposit</span>
@@ -305,17 +305,17 @@ export default function OrderDetailPage() {
               <div className="border-t border-primary-200 pt-3 mt-3">
                 <div className="flex justify-between font-semibold">
                   <span className="text-primary-900">Total</span>
-                  <span className="text-primary-900">{formatPrice(order.total_amount || 0)}</span>
+                  <span className="text-primary-900">{formatPrice(order.totalAmount || 0)}</span>
                 </div>
               </div>
               <div className="flex justify-between text-green-600">
                 <span>Paid</span>
                 <span>{formatPrice(order.paid_amount || 0)}</span>
               </div>
-              {(order.paid_amount || 0) < (order.total_amount || 0) && (
+              {(order.paid_amount || 0) < (order.totalAmount || 0) && (
                 <div className="flex justify-between font-medium text-yellow-600">
                   <span>Balance Due</span>
-                  <span>{formatPrice((order.total_amount || 0) - (order.paid_amount || 0))}</span>
+                  <span>{formatPrice((order.totalAmount || 0) - (order.paid_amount || 0))}</span>
                 </div>
               )}
             </div>
@@ -331,7 +331,7 @@ export default function OrderDetailPage() {
                   View Invoice
                 </Link>
               )}
-              {user?.role === 'customer' && ((order.total_amount || 0) - (order.paid_amount || 0) > 1) && (
+              {user?.role === 'customer' && ((order.totalAmount || 0) - (order.paid_amount || 0) > 1) && (
                 <Link to={`/orders/${order.id}/pay`} className="btn btn-primary w-full text-center">
                   Pay Balance
                 </Link>
@@ -455,19 +455,19 @@ export default function OrderDetailPage() {
               <div className="flex justify-between">
                 <span className="text-primary-500">Quotation</span>
                 <Link to={`/quotations`} className="text-primary-600 hover:text-primary-900">
-                  {order.quotation_id || 'N/A'}
+                  {order.quotationId || 'N/A'}
                 </Link>
               </div>
               <div className="flex justify-between">
                 <span className="text-primary-500">Created</span>
                 <span className="text-primary-900">
-                  {format(new Date(order.created_at), 'MMM d, yyyy')}
+                  {format(new Date(order.createdAt), 'MMM d, yyyy')}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-primary-500">Last Updated</span>
                 <span className="text-primary-900">
-                  {format(new Date(order.updated_at), 'MMM d, yyyy')}
+                  {format(new Date(order.updatedAt), 'MMM d, yyyy')}
                 </span>
               </div>
             </div>

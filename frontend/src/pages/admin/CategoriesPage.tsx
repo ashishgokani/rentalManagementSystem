@@ -16,7 +16,7 @@ import { adminApi, Category } from '../../api/adminApi';
 interface CategoryFormData {
   name: string;
   description: string;
-  parent_id: string;
+  parentId: string;
 }
 
 export default function CategoriesPage() {
@@ -35,7 +35,7 @@ export default function CategoriesPage() {
   const [formData, setFormData] = useState<CategoryFormData>({
     name: '',
     description: '',
-    parent_id: '',
+    parentId: '',
   });
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -70,7 +70,7 @@ export default function CategoriesPage() {
       await adminApi.createCategory({
         name: formData.name.trim(),
         description: formData.description.trim() || undefined,
-        parent_id: formData.parent_id || undefined,
+        parentId: formData.parentId || undefined,
       });
       setIsAddModalOpen(false);
       resetForm();
@@ -128,7 +128,7 @@ export default function CategoriesPage() {
     setFormData({
       name: category.name,
       description: category.description || '',
-      parent_id: category.parent_id || '',
+      parentId: category.parentId || '',
     });
     setFormError(null);
     setIsEditModalOpen(true);
@@ -141,7 +141,7 @@ export default function CategoriesPage() {
   };
 
   const resetForm = () => {
-    setFormData({ name: '', description: '', parent_id: '' });
+    setFormData({ name: '', description: '', parentId: '' });
     setFormError(null);
     setSelectedCategory(null);
   };
@@ -248,7 +248,7 @@ export default function CategoriesPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-primary-900">{category.name}</h3>
-                    {category.parent_id && (
+                    {category.parentId && (
                       <span className="text-xs text-primary-400">
                         Subcategory
                       </span>
@@ -282,11 +282,11 @@ export default function CategoriesPage() {
               <div className="mt-4 pt-4 border-t border-primary-100 flex items-center justify-between">
                 <div className="flex items-center gap-2 text-sm text-primary-500">
                   <Package size={16} />
-                  <span>{category.product_count ?? 0} products</span>
+                  <span>{category.productCount ?? 0} products</span>
                 </div>
-                {category.created_at && (
+                {category.createdAt && (
                   <span className="text-xs text-primary-400">
-                    {format(new Date(category.created_at), 'MMM dd, yyyy')}
+                    {format(new Date(category.createdAt), 'MMM dd, yyyy')}
                   </span>
                 )}
               </div>
@@ -353,8 +353,8 @@ export default function CategoriesPage() {
                   Parent Category
                 </label>
                 <select
-                  value={formData.parent_id}
-                  onChange={(e) => setFormData({ ...formData, parent_id: e.target.value })}
+                  value={formData.parentId}
+                  onChange={(e) => setFormData({ ...formData, parentId: e.target.value })}
                   className="w-full px-3 py-2 border border-primary-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-500 focus:border-transparent"
                 >
                   <option value="">None (Top-level category)</option>
@@ -497,9 +497,9 @@ export default function CategoriesPage() {
                 </div>
                 <div>
                   <p className="font-medium text-primary-900">{selectedCategory.name}</p>
-                  {selectedCategory.product_count !== undefined && selectedCategory.product_count > 0 && (
+                  {selectedCategory.productCount !== undefined && selectedCategory.productCount > 0 && (
                     <p className="text-sm text-red-600">
-                      This category has {selectedCategory.product_count} products
+                      This category has {selectedCategory.productCount} products
                     </p>
                   )}
                 </div>

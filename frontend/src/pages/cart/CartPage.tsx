@@ -277,15 +277,15 @@ export default function CartPage() {
                   await import('../../api/quotations').then(({ quotationsApi }) =>
                     quotationsApi.createQuotation({
                       lines: items.map(item => ({
-                        product_id: item.product.id,
+                        productId: item.product.id,
                         quantity: item.rentalPeriod.quantity,
                         rental_period: {
                           type: item.rentalPeriod.type,
-                          start_date: item.rentalPeriod.startDate,
-                          end_date: item.rentalPeriod.endDate,
+                          startDate: item.rentalPeriod.startDate,
+                          endDate: item.rentalPeriod.endDate,
                           quantity: item.rentalPeriod.quantity
                         },
-                        unit_price: item.unitPrice,
+                        unitPrice: item.unitPrice,
                         total_price: item.totalPrice
                       }))
                     })

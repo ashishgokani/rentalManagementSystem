@@ -310,7 +310,7 @@ export default function ReportsPage() {
                 {categoryStats.length > 0 ? (
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
                     {categoryStats.slice(0, 5).map((cat) => (
-                      <div key={cat.category_id} className="bg-primary-50 rounded-xl p-4 text-center">
+                      <div key={cat.categoryId} className="bg-primary-50 rounded-xl p-4 text-center">
                         <p className="text-2xl font-bold text-primary-900">{cat.percentage.toFixed(1)}%</p>
                         <p className="text-sm text-primary-700 font-medium">{cat.category_name}</p>
                         <p className="text-xs text-primary-500 mt-1">{cat.product_count} products</p>
@@ -372,10 +372,10 @@ export default function ReportsPage() {
                             <td className="py-4 px-4 font-medium text-primary-900">{order.order_number}</td>
                             <td className="py-4 px-4 text-primary-600">{order.customer_name || 'N/A'}</td>
                             <td className="py-4 px-4 text-primary-600">
-                              {format(new Date(order.created_at), 'MMM d, yyyy')}
+                              {format(new Date(order.createdAt), 'MMM d, yyyy')}
                             </td>
                             <td className="py-4 px-4 text-right font-medium text-primary-900">
-                              {formatPrice(order.total_amount)}
+                              {formatPrice(order.totalAmount)}
                             </td>
                             <td className="py-4 px-4 text-center">
                               <span className={`badge ${order.status === 'completed' || order.status === 'returned' ? 'badge-success' :
@@ -420,7 +420,7 @@ export default function ReportsPage() {
                   <tbody className="divide-y divide-primary-100">
                     {vendorPerformance.length > 0 ? (
                       vendorPerformance.map((vendor, index) => (
-                        <tr key={vendor.vendor_id} className="hover:bg-primary-50">
+                        <tr key={vendor.vendorId} className="hover:bg-primary-50">
                           <td className="py-4 px-4">
                             <span className={`w-6 h-6 inline-flex items-center justify-center rounded-full text-xs font-medium ${index < 3 ? 'bg-primary-900 text-white' : 'bg-primary-100 text-primary-700'
                               }`}>

@@ -106,7 +106,7 @@ export default function InvoiceDetailPage() {
   const handleWalletPay = async () => {
     if (!invoice) return;
 
-    const amountToPay = (invoice.total_amount || 0) - (invoice.paid_amount || 0);
+    const amountToPay = (invoice.totalAmount || 0) - (invoice.paid_amount || 0);
 
     if (walletBalance < amountToPay) {
       alert('Insufficient wallet balance!');
@@ -186,7 +186,7 @@ export default function InvoiceDetailPage() {
                 <p className="text-sm text-primary-600">GSTIN: {invoice.customer_gstin || 'N/A'}</p>
               </div>
               <div className="text-right">
-                <p className="text-sm text-primary-500">Invoice Date: <span className="text-primary-900">{format(new Date(invoice.created_at), 'MMM d, yyyy')}</span></p>
+                <p className="text-sm text-primary-500">Invoice Date: <span className="text-primary-900">{format(new Date(invoice.createdAt), 'MMM d, yyyy')}</span></p>
                 <p className="text-sm text-primary-500 mt-1">Due Date: <span className="text-primary-900">{format(new Date(invoice.due_date), 'MMM d, yyyy')}</span></p>
               </div>
             </div>
@@ -206,7 +206,7 @@ export default function InvoiceDetailPage() {
                   <tr key={line.id}>
                     <td className="py-3 text-primary-900">{line.description}</td>
                     <td className="py-3 text-center text-primary-600">{line.quantity}</td>
-                    <td className="py-3 text-right text-primary-600">{formatPrice(line.unit_price)}</td>
+                    <td className="py-3 text-right text-primary-600">{formatPrice(line.unitPrice)}</td>
                     <td className="py-3 text-right font-medium text-primary-900">{formatPrice(line.total_price)}</td>
                   </tr>
                 ))}
@@ -223,11 +223,11 @@ export default function InvoiceDetailPage() {
                   </div>
                   <div className="flex justify-between py-2">
                     <span className="text-primary-600">GST ({invoice.tax_rate || 18}%)</span>
-                    <span className="text-primary-900">{formatPrice(invoice.tax_amount || 0)}</span>
+                    <span className="text-primary-900">{formatPrice(invoice.taxAmount || 0)}</span>
                   </div>
                   <div className="flex justify-between py-2 border-t border-primary-200 font-bold">
                     <span className="text-primary-900">Total</span>
-                    <span className="text-primary-900">{formatPrice(invoice.total_amount || 0)}</span>
+                    <span className="text-primary-900">{formatPrice(invoice.totalAmount || 0)}</span>
                   </div>
                   {(invoice.paid_amount || 0) > 0 && (
                     <>
@@ -235,10 +235,10 @@ export default function InvoiceDetailPage() {
                         <span>Paid</span>
                         <span>{formatPrice(invoice.paid_amount)}</span>
                       </div>
-                      {(invoice.paid_amount || 0) < (invoice.total_amount || 0) && (
+                      {(invoice.paid_amount || 0) < (invoice.totalAmount || 0) && (
                         <div className="flex justify-between py-2 font-bold text-yellow-600">
                           <span>Balance Due</span>
-                          <span>{formatPrice((invoice.total_amount || 0) - (invoice.paid_amount || 0))}</span>
+                          <span>{formatPrice((invoice.totalAmount || 0) - (invoice.paid_amount || 0))}</span>
                         </div>
                       )}
                     </>
@@ -278,12 +278,12 @@ export default function InvoiceDetailPage() {
                   Send to Customer
                 </button>
               )}
-              {user?.role === 'customer' && invoice.status !== 'cancelled' && ((invoice.total_amount || 0) - (invoice.paid_amount || 0) > 1) && (
+              {user?.role === 'customer' && invoice.status !== 'cancelled' && ((invoice.totalAmount || 0) - (invoice.paid_amount || 0) > 1) && (
                 <div className="space-y-3">
                   <button
                     onClick={handleWalletPay}
-                    disabled={paying || walletBalance < ((invoice.total_amount || 0) - (invoice.paid_amount || 0))}
-                    className={`btn w-full flex-col items-start p-4 ${walletBalance >= ((invoice.total_amount || 0) - (invoice.paid_amount || 0))
+                    disabled={paying || walletBalance < ((invoice.totalAmount || 0) - (invoice.paid_amount || 0))}
+                    className={`btn w-full flex-col items-start p-4 ${walletBalance >= ((invoice.totalAmount || 0) - (invoice.paid_amount || 0))
                       ? 'bg-primary-900 text-white hover:bg-primary-800'
                       : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                       }`}
@@ -313,17 +313,17 @@ export default function InvoiceDetailPage() {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-primary-600">Total Amount</span>
-                <span className="font-semibold text-primary-900">{formatPrice(invoice.total_amount || 0)}</span>
+                <span className="font-semibold text-primary-900">{formatPrice(invoice.totalAmount || 0)}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-primary-600">Amount Paid</span>
                 <span className="font-semibold text-green-600">{formatPrice(invoice.paid_amount || 0)}</span>
               </div>
-              {(invoice.paid_amount || 0) < (invoice.total_amount || 0) && (
+              {(invoice.paid_amount || 0) < (invoice.totalAmount || 0) && (
                 <div className="flex items-center justify-between">
                   <span className="text-primary-600">Balance Due</span>
                   <span className="font-semibold text-yellow-600">
-                    {formatPrice((invoice.total_amount || 0) - (invoice.paid_amount || 0))}
+                    {formatPrice((invoice.totalAmount || 0) - (invoice.paid_amount || 0))}
                   </span>
                 </div>
               )}
@@ -333,11 +333,11 @@ export default function InvoiceDetailPage() {
                 <div className="w-full bg-primary-100 rounded-full h-2">
                   <div
                     className="bg-green-500 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${((invoice.paid_amount || 0) / (invoice.total_amount || 1)) * 100}%` }}
+                    style={{ width: `${((invoice.paid_amount || 0) / (invoice.totalAmount || 1)) * 100}%` }}
                   />
                 </div>
                 <p className="text-xs text-primary-500 mt-1 text-center">
-                  {Math.round(((invoice.paid_amount || 0) / (invoice.total_amount || 1)) * 100)}% paid
+                  {Math.round(((invoice.paid_amount || 0) / (invoice.totalAmount || 1)) * 100)}% paid
                 </p>
               </div>
             </div>
@@ -352,7 +352,7 @@ export default function InvoiceDetailPage() {
                 <div>
                   <p className="text-xs text-primary-500">Created</p>
                   <p className="text-sm text-primary-900">
-                    {format(new Date(invoice.created_at), 'MMM d, yyyy')}
+                    {format(new Date(invoice.createdAt), 'MMM d, yyyy')}
                   </p>
                 </div>
               </div>
@@ -376,8 +376,8 @@ export default function InvoiceDetailPage() {
                 <Receipt size={18} className="text-primary-400" />
                 <div>
                   <p className="text-xs text-primary-500">Related Order</p>
-                  <Link to={`/orders/${invoice.order_id}`} className="text-sm text-primary-600 hover:text-primary-900">
-                    {invoice.order_id || 'N/A'}
+                  <Link to={`/orders/${invoice.orderId}`} className="text-sm text-primary-600 hover:text-primary-900">
+                    {invoice.orderId || 'N/A'}
                   </Link>
                 </div>
               </div>
@@ -393,7 +393,7 @@ export default function InvoiceDetailPage() {
                 <div>
                   <p className="font-medium text-green-800">Fully Paid</p>
                   <p className="text-sm text-green-700">
-                    Paid on {format(new Date(invoice.updated_at), 'MMM d, yyyy')}
+                    Paid on {format(new Date(invoice.updatedAt), 'MMM d, yyyy')}
                   </p>
                 </div>
               </div>

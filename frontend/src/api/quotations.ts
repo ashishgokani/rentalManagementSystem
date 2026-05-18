@@ -1,18 +1,18 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 // Types
 export interface RentalPeriodSelection {
   type: string;
-  start_date: string;
-  end_date: string;
+  startDate: string;
+  endDate: string;
   quantity: number;
 }
 
 export interface QuotationLineCreate {
-  product_id: string;
+  productId: string;
   quantity: number;
   rental_period: RentalPeriodSelection;
-  unit_price: number;
+  unitPrice: number;
   total_price: number;
 }
 
@@ -24,30 +24,30 @@ export interface QuotationCreate {
 
 export interface QuotationLine {
   id: string;
-  product_id: string;
+  productId: string;
   product_name: string;
   quantity: number;
   rental_period_type: string;
   rental_start_date: string;
   rental_end_date: string;
-  unit_price: number;
+  unitPrice: number;
   total_price: number;
 }
 
 export interface Quotation {
   id: string;
   quotation_number: string;
-  customer_id: string;
+  customerId: string;
   customer_name: string;
   status: string;
   lines: QuotationLine[];
   subtotal: number;
   tax_rate: number;
-  tax_amount: number;
-  total_amount: number;
+  taxAmount: number;
+  totalAmount: number;
   valid_until?: string;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 class QuotationsApi {
@@ -58,7 +58,7 @@ class QuotationsApi {
   }
 
   private getHeaders(): HeadersInit {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('token');
     return {
       'Content-Type': 'application/json',
       ...(token ? { 'Authorization': `Bearer ${token}` } : {})
@@ -109,7 +109,7 @@ class QuotationsApi {
   async updateQuotation(id: string, data: {
     status?: string;
     notes?: string;
-    lines?: { id: string; unit_price: number; total_price: number }[];
+    lines?: { id: string; unitPrice: number; total_price: number }[];
   }): Promise<Quotation> {
     const response = await fetch(`${this.baseUrl}/${id}`, {
       method: 'PUT',

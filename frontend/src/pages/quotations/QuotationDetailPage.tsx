@@ -58,7 +58,7 @@ export default function QuotationDetailPage() {
             // Initialize edited prices
             const prices: Record<string, number> = {};
             data.lines.forEach(line => {
-                prices[line.id] = line.unit_price;
+                prices[line.id] = line.unitPrice;
             });
             setEditedLines(prices);
         } catch (err: any) {
@@ -82,7 +82,7 @@ export default function QuotationDetailPage() {
     const calculateTotal = () => {
         if (!quotation) return 0;
         return quotation.lines.reduce((sum, line) => {
-            const price = editedLines[line.id] ?? line.unit_price;
+            const price = editedLines[line.id] ?? line.unitPrice;
             return sum + calculateLineTotal(line, price);
         }, 0);
     };
@@ -95,7 +95,7 @@ export default function QuotationDetailPage() {
             setProcessing(true);
             const linesUpdate = quotation.lines.map(line => ({
                 id: line.id,
-                unit_price: editedLines[line.id],
+                unitPrice: editedLines[line.id],
                 total_price: calculateLineTotal(line, editedLines[line.id])
             }));
 
@@ -146,9 +146,9 @@ export default function QuotationDetailPage() {
 
             // 1. Group lines by Vendor
             const linesWithProduct = await Promise.all(quotation.lines.map(async (line) => {
-                const product = await productsApi.getProduct(line.product_id);
-                // Use logic to get vendor_id. API returns vendor_id.
-                return { ...line, vendorId: product.vendor_id };
+                const product = await productsApi.getProduct(line.productId);
+                // Use logic to get vendorId. API returns vendorId.
+                return { ...line, vendorId: product.vendorId };
             }));
 
             const ordersByVendor: Record<string, typeof linesWithProduct> = {};
@@ -163,18 +163,18 @@ export default function QuotationDetailPage() {
             const createdOrders = [];
             for (const [vendorId, lines] of Object.entries(ordersByVendor)) {
                 const orderData = {
-                    quotation_id: quotation.id,
-                    vendor_id: vendorId,
+                    quotationId: quotation.id,
+                    vendorId: vendorId,
                     lines: lines.map(line => ({
-                        product_id: line.product_id,
+                        productId: line.productId,
                         quantity: line.quantity,
                         rental_period: {
                             type: line.rental_period_type,
-                            start_date: line.rental_start_date,
-                            end_date: line.rental_end_date,
+                            startDate: line.rental_start_date,
+                            endDate: line.rental_end_date,
                             quantity: line.quantity
                         },
-                        unit_price: line.unit_price,
+                        unitPrice: line.unitPrice,
                         total_price: line.total_price
                     })),
                     security_deposit: 0,
@@ -274,7 +274,7 @@ export default function QuotationDetailPage() {
                                             // Read Only View
                                             <>
                                                 <p className="text-sm text-primary-500">
-                                                    {formatPrice(line.unit_price)} / unit
+                                                    {formatPrice(line.unitPrice)} / unit
                                                 </p>
                                                 <p className="font-bold text-primary-900 mt-1">
                                                     {formatPrice(line.total_price)}
@@ -295,7 +295,7 @@ export default function QuotationDetailPage() {
                                         <span>
                                             {isVendor && (quotation.status.toUpperCase() === 'DRAFT')
                                                 ? formatPrice(calculateTotal())
-                                                : formatPrice(quotation.total_amount)
+                                                : formatPrice(quotation.totalAmount)
                                             }
                                         </span>
                                     </div>
@@ -318,7 +318,7 @@ export default function QuotationDetailPage() {
                             </div>
                             <div>
                                 <p className="font-medium text-primary-900">{quotation.customer_name}</p>
-                                <p className="text-xs text-primary-500">Customer ID: ...{quotation.customer_id.slice(-4)}</p>
+                                <p className="text-xs text-primary-500">Customer ID: ...{quotation.customerId.slice(-4)}</p>
                             </div>
                         </div>
                     </div>

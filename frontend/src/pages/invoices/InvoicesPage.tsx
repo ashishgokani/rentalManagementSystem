@@ -79,10 +79,10 @@ export default function InvoicesPage() {
   };
 
   const totalStats = {
-    total: invoices.reduce((sum, inv) => sum + inv.total_amount, 0),
+    total: invoices.reduce((sum, inv) => sum + inv.totalAmount, 0),
     paid: invoices.filter(inv => inv.status === 'paid').reduce((sum, inv) => sum + (inv.paid_amount || 0), 0),
     pending: invoices.filter(inv => inv.status !== 'paid' && inv.status !== 'cancelled')
-      .reduce((sum, inv) => sum + (inv.total_amount - (inv.paid_amount || 0)), 0),
+      .reduce((sum, inv) => sum + (inv.totalAmount - (inv.paid_amount || 0)), 0),
   };
 
   if (loading) {
@@ -232,7 +232,7 @@ export default function InvoicesPage() {
                     </span>
                     <span className="flex items-center gap-1">
                       <DollarSign size={14} />
-                      Order: {invoice.order_id}
+                      Order: {invoice.orderId}
                     </span>
                   </div>
                 </div>
@@ -240,10 +240,10 @@ export default function InvoicesPage() {
                 {/* Amount & Payment Info */}
                 <div className="lg:text-right">
                   <p className="text-sm text-primary-500">Total Amount</p>
-                  <p className="text-xl font-bold text-primary-900">{formatPrice(invoice.total_amount)}</p>
+                  <p className="text-xl font-bold text-primary-900">{formatPrice(invoice.totalAmount)}</p>
                   {invoice.status === 'partial' && (
                     <p className="text-sm text-yellow-600 mt-1">
-                      Paid: {formatPrice(invoice.paid_amount || 0)} | Due: {formatPrice(invoice.total_amount - (invoice.paid_amount || 0))}
+                      Paid: {formatPrice(invoice.paid_amount || 0)} | Due: {formatPrice(invoice.totalAmount - (invoice.paid_amount || 0))}
                     </p>
                   )}
                 </div>

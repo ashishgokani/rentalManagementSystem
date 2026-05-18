@@ -55,7 +55,7 @@ export default function EditProductPage() {
                 // Populate form
                 setName(productData.name);
                 setDescription(productData.description || '');
-                setCategoryId(productData.category_id || '');
+                setCategoryId(productData.categoryId || '');
                 setIsRentable(productData.is_rentable);
                 setIsPublished(productData.is_published);
                 setQuantityOnHand(productData.quantity_on_hand);
@@ -127,7 +127,7 @@ export default function EditProductPage() {
                 name: name.trim(),
                 description: description.trim() || undefined,
                 images: images.length > 0 ? images : undefined,
-                category_id: categoryId || undefined,
+                categoryId: categoryId || undefined,
                 is_rentable: isRentable,
                 rental_pricing: Object.keys(rentalPricing).length > 0 ? rentalPricing : undefined,
                 cost_price: costPrice || undefined,

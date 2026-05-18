@@ -287,7 +287,7 @@ export default function TransactionsPage() {
                                                 {txn.description || txn.reference_type || '-'}
                                             </td>
                                             <td className="py-4 px-4 text-primary-600">
-                                                {txn.created_at ? format(new Date(txn.created_at), 'MMM d, yyyy HH:mm') : '-'}
+                                                {txn.createdAt ? format(new Date(txn.createdAt), 'MMM d, yyyy HH:mm') : '-'}
                                             </td>
                                         </tr>
                                     ))
@@ -337,12 +337,12 @@ export default function TransactionsPage() {
                                                 </span>
                                             </td>
                                             <td className="py-4 px-4 text-center">
-                                                <span className={`badge ${wallet.is_active ? 'badge-success' : 'badge-danger'}`}>
-                                                    {wallet.is_active ? 'Active' : 'Inactive'}
+                                                <span className={`badge ${wallet.isActive ? 'badge-success' : 'badge-danger'}`}>
+                                                    {wallet.isActive ? 'Active' : 'Inactive'}
                                                 </span>
                                             </td>
                                             <td className="py-4 px-4 text-primary-600">
-                                                {wallet.created_at ? format(new Date(wallet.created_at), 'MMM d, yyyy') : '-'}
+                                                {wallet.createdAt ? format(new Date(wallet.createdAt), 'MMM d, yyyy') : '-'}
                                             </td>
                                             <td className="py-4 px-4 text-center">
                                                 <div className="flex items-center justify-center gap-2">
@@ -417,7 +417,7 @@ export default function TransactionsPage() {
                                     <option value="">Choose a user...</option>
                                     {users.map((user) => (
                                         <option key={user.id} value={user.id}>
-                                            {user.first_name} {user.last_name} ({user.email})
+                                            {user.firstName} {user.lastName} ({user.email})
                                         </option>
                                     ))}
                                 </select>

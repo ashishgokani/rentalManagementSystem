@@ -15,8 +15,8 @@ export default function OAuthCallbackPage() {
       if (processedRef.current) return;
       processedRef.current = true;
 
-      const accessToken = searchParams.get('access_token');
-      const refreshToken = searchParams.get('refresh_token');
+      const accessToken = searchParams.get('token');
+      const refreshToken = searchParams.get('refreshToken');
       const errorParam = searchParams.get('error');
 
       if (errorParam) {

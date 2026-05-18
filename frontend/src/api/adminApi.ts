@@ -1,17 +1,17 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 // Types
 export interface AdminUser {
   id: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   role: 'CUSTOMER' | 'VENDOR' | 'ADMIN';
-  company_name?: string;
-  business_category?: string;
+  companyName?: string;
+  businessCategory?: string;
   gstin?: string;
-  is_active: boolean;
-  created_at: string;
+  isActive: boolean;
+  createdAt: string;
 }
 
 export interface PaginatedUsers {
@@ -48,13 +48,13 @@ export interface RecentActivity {
 }
 
 export interface CreateUserData {
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   role: 'CUSTOMER' | 'VENDOR' | 'ADMIN';
-  company_name?: string;
-  business_category?: string;
+  companyName?: string;
+  businessCategory?: string;
   gstin?: string;
 }
 
@@ -62,9 +62,10 @@ export interface Category {
   id: string;
   name: string;
   description?: string;
-  is_active: boolean;
-  product_count?: number;
-  created_at?: string;
+  isActive: boolean;
+  productCount?: number;
+  parentId?: string;
+  createdAt?: string;
 }
 
 class AdminApi {
@@ -75,7 +76,7 @@ class AdminApi {
   }
 
   private getHeaders(): HeadersInit {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('token');
     return {
       'Content-Type': 'application/json',
       ...(token ? { 'Authorization': `Bearer ${token}` } : {})
@@ -156,7 +157,7 @@ class AdminApi {
 
   private async getPendingVendorsCount(): Promise<number> {
     try {
-      const vendors = await this.getVendors({ is_active: false });
+      const vendors = await this.getVendors({ isActive: false });
       return vendors.total;
     } catch {
       return 0;
@@ -169,14 +170,14 @@ class AdminApi {
     per_page?: number;
     search?: string;
     role?: 'CUSTOMER' | 'VENDOR' | 'ADMIN';
-    is_active?: boolean;
+    isActive?: boolean;
   }): Promise<PaginatedUsers> {
     const searchParams = new URLSearchParams();
     if (params?.page) searchParams.append('page', String(params.page));
     if (params?.per_page) searchParams.append('per_page', String(params.per_page));
     if (params?.search) searchParams.append('search', params.search);
     if (params?.role) searchParams.append('role', params.role);
-    if (params?.is_active !== undefined) searchParams.append('is_active', String(params.is_active));
+    if (params?.isActive !== undefined) searchParams.append('isActive', String(params.isActive));
 
     const url = `${this.baseUrl}/users${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
     const response = await fetch(url, {
@@ -201,11 +202,11 @@ class AdminApi {
     return this.handleResponse<AdminUser>(response);
   }
 
-  async updateUserStatus(id: string, is_active: boolean): Promise<AdminUser> {
+  async updateUserStatus(id: string, isActive: boolean): Promise<AdminUser> {
     const response = await fetch(`${this.baseUrl}/users/${id}/status`, {
       method: 'PATCH',
       headers: this.getHeaders(),
-      body: JSON.stringify({ is_active })
+      body: JSON.stringify({ isActive })
     });
     return this.handleResponse<AdminUser>(response);
   }
@@ -232,13 +233,13 @@ class AdminApi {
     page?: number;
     per_page?: number;
     search?: string;
-    is_active?: boolean;
+    isActive?: boolean;
   }): Promise<PaginatedUsers> {
     const searchParams = new URLSearchParams();
     if (params?.page) searchParams.append('page', String(params.page));
     if (params?.per_page) searchParams.append('per_page', String(params.per_page));
     if (params?.search) searchParams.append('search', params.search);
-    if (params?.is_active !== undefined) searchParams.append('is_active', String(params.is_active));
+    if (params?.isActive !== undefined) searchParams.append('isActive', String(params.isActive));
 
     const url = `${this.baseUrl}/vendors${searchParams.toString() ? `?${searchParams.toString()}` : ''}`;
     const response = await fetch(url, {
@@ -264,7 +265,7 @@ class AdminApi {
     return this.handleResponse<Category[]>(response);
   }
 
-  async createCategory(data: { name: string; description?: string }): Promise<Category> {
+  async createCategory(data: { name: string; description?: string; parentId?: string }): Promise<Category> {
     const response = await fetch(`${API_BASE_URL}/api/products/categories`, {
       method: 'POST',
       headers: this.getHeaders(),
@@ -273,7 +274,7 @@ class AdminApi {
     return this.handleResponse<Category>(response);
   }
 
-  async updateCategory(id: string, data: { name?: string; description?: string; is_active?: boolean }): Promise<Category> {
+  async updateCategory(id: string, data: { name?: string; description?: string; isActive?: boolean }): Promise<Category> {
     const response = await fetch(`${API_BASE_URL}/api/products/categories/${id}`, {
       method: 'PUT',
       headers: this.getHeaders(),
@@ -327,12 +328,12 @@ class AdminApi {
   }
 
   // Coupon Management
-  async getCoupons(params?: { page?: number; page_size?: number; search?: string; is_active?: boolean }): Promise<PaginatedCoupons> {
+  async getCoupons(params?: { page?: number; page_size?: number; search?: string; isActive?: boolean }): Promise<PaginatedCoupons> {
     const queryParams = new URLSearchParams();
     if (params?.page) queryParams.append('page', params.page.toString());
     if (params?.page_size) queryParams.append('page_size', params.page_size.toString());
     if (params?.search) queryParams.append('search', params.search);
-    if (params?.is_active !== undefined) queryParams.append('is_active', params.is_active.toString());
+    if (params?.isActive !== undefined) queryParams.append('isActive', params.isActive.toString());
     const response = await fetch(`${this.baseUrl}/coupons?${queryParams}`, {
       headers: this.getHeaders()
     });
@@ -372,12 +373,12 @@ class AdminApi {
     return this.handleResponse<{ message: string }>(response);
   }
 
-  async toggleCouponStatus(couponId: string): Promise<{ message: string; is_active: boolean }> {
+  async toggleCouponStatus(couponId: string): Promise<{ message: string; isActive: boolean }> {
     const response = await fetch(`${this.baseUrl}/coupons/${couponId}/toggle`, {
       method: 'POST',
       headers: this.getHeaders()
     });
-    return this.handleResponse<{ message: string; is_active: boolean }>(response);
+    return this.handleResponse<{ message: string; isActive: boolean }>(response);
   }
 }
 
@@ -389,8 +390,8 @@ export interface AdminWallet {
   user_email: string;
   balance: number;
   currency: string;
-  is_active: boolean;
-  created_at: string;
+  isActive: boolean;
+  createdAt: string;
 }
 
 export interface WalletStats {
@@ -415,7 +416,7 @@ export interface AdminTransaction {
   status: string;
   reference_type?: string;
   description?: string;
-  created_at: string;
+  createdAt: string;
 }
 
 // Coupon Types
@@ -432,8 +433,8 @@ export interface Coupon {
   per_user_limit?: number;
   valid_from?: string;
   valid_until?: string;
-  is_active: boolean;
-  created_at: string;
+  isActive: boolean;
+  createdAt: string;
 }
 
 export interface CouponCreate {
@@ -447,7 +448,7 @@ export interface CouponCreate {
   per_user_limit?: number;
   valid_from?: string;
   valid_until?: string;
-  is_active?: boolean;
+  isActive?: boolean;
 }
 
 export interface PaginatedCoupons {

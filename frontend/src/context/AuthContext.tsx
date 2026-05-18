@@ -32,24 +32,24 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const mapApiUserToUser = (apiUser: UserResponse): User => ({
   id: apiUser.id,
-  firstName: apiUser.first_name,
-  lastName: apiUser.last_name,
+  firstName: apiUser.firstName,
+  lastName: apiUser.lastName,
   email: apiUser.email,
-  companyName: apiUser.company_name || '',
-  businessCategory: apiUser.business_category || '',
+  companyName: apiUser.companyName || '',
+  businessCategory: apiUser.businessCategory || '',
   gstin: apiUser.gstin || '',
   role: apiUser.role.toLowerCase() as UserRole,
   createdAt: new Date().toISOString(),
-  referralCode: apiUser.referral_code,
+  referralCode: apiUser.referralCode,
   phone: apiUser.phone,
   address: apiUser.address,
   city: apiUser.city,
   state: apiUser.state,
-  postalCode: apiUser.postal_code,
+  postalCode: apiUser.postalCode,
   country: apiUser.country,
-  profilePhoto: apiUser.profile_photo,
-  phoneNumber: apiUser.phone_number,
-  isCalendarConnected: apiUser.is_calendar_connected,
+  profilePhoto: apiUser.profilePhoto,
+  phoneNumber: apiUser.phoneNumber,
+  isCalendarConnected: apiUser.isCalendarConnected,
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -61,18 +61,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   const saveTokens = (accessToken: string, refreshToken: string) => {
-    localStorage.setItem('access_token', accessToken);
-    localStorage.setItem('refresh_token', refreshToken);
+    localStorage.setItem('token', accessToken);
+    localStorage.setItem('refreshToken', refreshToken);
   };
 
   const clearTokens = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
   };
 
   const handleAuthResponse = useCallback((response: TokenResponse) => {
-    saveTokens(response.access_token, response.refresh_token);
+    saveTokens(response.token, response.refreshToken);
     const user = mapApiUserToUser(response.user);
     localStorage.setItem('user', JSON.stringify(user));
     setState({
@@ -100,16 +100,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     try {
       const response = await authApi.register({
-        first_name: data.firstName,
-        last_name: data.lastName,
+        firstName: data.firstName,
+        lastName: data.lastName,
         email: data.email,
         phone: data.phone,
         password: data.password,
-        company_name: data.companyName,
-        business_category: data.businessCategory,
+        companyName: data.companyName,
+        businessCategory: data.businessCategory,
         gstin: data.gstin,
         role: data.role.toUpperCase() as 'CUSTOMER' | 'VENDOR',
-        referral_code: data.referralCode,
+        referralCode: data.referralCode,
       });
       handleAuthResponse(response);
     } catch (error) {
@@ -165,7 +165,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const refreshProfile = useCallback(async () => {
-    const accessToken = localStorage.getItem('access_token');
+    const accessToken = localStorage.getItem('token');
     if (!accessToken) return;
 
     try {
@@ -184,8 +184,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Check for stored tokens on mount
   useEffect(() => {
     const initAuth = async () => {
-      const accessToken = localStorage.getItem('access_token');
-      const refreshToken = localStorage.getItem('refresh_token');
+      const accessToken = localStorage.getItem('token');
+      const refreshToken = localStorage.getItem('refreshToken');
 
       if (accessToken) {
         try {

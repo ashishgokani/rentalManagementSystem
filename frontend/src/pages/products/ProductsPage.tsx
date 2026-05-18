@@ -87,7 +87,7 @@ export default function ProductsPage() {
     if (!user) return false;
     const role = user.role.toUpperCase();
     if (role === 'ADMIN') return true;
-    if (role === 'VENDOR' && product.vendor_id === user.id) return true;
+    if (role === 'VENDOR' && product.vendorId === user.id) return true;
     return false;
   };
 

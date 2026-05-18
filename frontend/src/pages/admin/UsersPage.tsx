@@ -27,12 +27,12 @@ import {
 type UserRole = 'CUSTOMER' | 'VENDOR' | 'ADMIN';
 
 interface CreateUserFormData {
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   role: UserRole;
-  company_name?: string;
+  companyName?: string;
 }
 
 const UsersPage: React.FC = () => {
@@ -64,12 +64,12 @@ const UsersPage: React.FC = () => {
 
   // Form state for new user
   const [newUserForm, setNewUserForm] = useState<CreateUserFormData>({
-    first_name: '',
-    last_name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     role: 'CUSTOMER',
-    company_name: '',
+    companyName: '',
   });
 
   // Fetch users
@@ -83,7 +83,7 @@ const UsersPage: React.FC = () => {
         per_page: number;
         search?: string;
         role?: UserRole;
-        is_active?: boolean;
+        isActive?: boolean;
       } = {
         page: currentPage,
         per_page: perPage,
@@ -98,9 +98,9 @@ const UsersPage: React.FC = () => {
       }
 
       if (statusFilter === 'active') {
-        params.is_active = true;
+        params.isActive = true;
       } else if (statusFilter === 'inactive') {
-        params.is_active = false;
+        params.isActive = false;
       }
 
       const response: PaginatedUsers = await adminApi.getUsers(params);
@@ -150,18 +150,18 @@ const UsersPage: React.FC = () => {
     try {
       const userData = {
         ...newUserForm,
-        company_name: newUserForm.role === 'VENDOR' ? newUserForm.company_name : undefined,
+        companyName: newUserForm.role === 'VENDOR' ? newUserForm.companyName : undefined,
       };
 
       await adminApi.createUser(userData);
       setShowAddModal(false);
       setNewUserForm({
-        first_name: '',
-        last_name: '',
+        firstName: '',
+        lastName: '',
         email: '',
         password: '',
         role: 'CUSTOMER',
-        company_name: '',
+        companyName: '',
       });
       fetchUsers();
     } catch (err) {
@@ -174,7 +174,7 @@ const UsersPage: React.FC = () => {
   // Handle toggle user status
   const handleToggleStatus = async (user: AdminUser) => {
     try {
-      await adminApi.updateUserStatus(user.id, !user.is_active);
+      await adminApi.updateUserStatus(user.id, !user.isActive);
       fetchUsers();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update user status');
@@ -424,21 +424,21 @@ const UsersPage: React.FC = () => {
                         <div className="flex items-center">
                           <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
                             <span className="text-indigo-600 font-medium">
-                              {user.first_name.charAt(0)}
-                              {user.last_name.charAt(0)}
+                              {user.firstName.charAt(0)}
+                              {user.lastName.charAt(0)}
                             </span>
                           </div>
                           <div className="ml-4">
                             <div className="text-sm font-medium text-gray-900">
-                              {user.first_name} {user.last_name}
+                              {user.firstName} {user.lastName}
                             </div>
                             <div className="flex items-center text-sm text-gray-500">
                               <Mail className="w-4 h-4 mr-1" />
                               {user.email}
                             </div>
-                            {user.company_name && (
+                            {user.companyName && (
                               <div className="text-xs text-gray-400">
-                                {user.company_name}
+                                {user.companyName}
                               </div>
                             )}
                           </div>
@@ -457,10 +457,10 @@ const UsersPage: React.FC = () => {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span
                           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadge(
-                            user.is_active
+                            user.isActive
                           )}`}
                         >
-                          {user.is_active ? (
+                          {user.isActive ? (
                             <>
                               <UserCheck className="w-3 h-3 mr-1" />
                               Active
@@ -474,7 +474,7 @@ const UsersPage: React.FC = () => {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {format(new Date(user.created_at), 'MMM d, yyyy')}
+                        {format(new Date(user.createdAt), 'MMM d, yyyy')}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="relative">
@@ -492,7 +492,7 @@ const UsersPage: React.FC = () => {
                                 onClick={() => handleToggleStatus(user)}
                                 className="w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-2"
                               >
-                                {user.is_active ? (
+                                {user.isActive ? (
                                   <>
                                     <UserX className="w-4 h-4 text-red-500" />
                                     <span>Deactivate</span>
@@ -602,9 +602,9 @@ const UsersPage: React.FC = () => {
                     </label>
                     <input
                       type="text"
-                      value={newUserForm.first_name}
+                      value={newUserForm.firstName}
                       onChange={(e) =>
-                        setNewUserForm({ ...newUserForm, first_name: e.target.value })
+                        setNewUserForm({ ...newUserForm, firstName: e.target.value })
                       }
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
@@ -616,9 +616,9 @@ const UsersPage: React.FC = () => {
                     </label>
                     <input
                       type="text"
-                      value={newUserForm.last_name}
+                      value={newUserForm.lastName}
                       onChange={(e) =>
-                        setNewUserForm({ ...newUserForm, last_name: e.target.value })
+                        setNewUserForm({ ...newUserForm, lastName: e.target.value })
                       }
                       required
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
@@ -680,9 +680,9 @@ const UsersPage: React.FC = () => {
                     </label>
                     <input
                       type="text"
-                      value={newUserForm.company_name}
+                      value={newUserForm.companyName}
                       onChange={(e) =>
-                        setNewUserForm({ ...newUserForm, company_name: e.target.value })
+                        setNewUserForm({ ...newUserForm, companyName: e.target.value })
                       }
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                     />

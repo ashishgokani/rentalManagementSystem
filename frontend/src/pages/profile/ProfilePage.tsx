@@ -35,7 +35,7 @@ export default function ProfilePage() {
             const formData = new FormData();
             formData.append('file', file);
 
-            const token = localStorage.getItem('access_token');
+            const token = localStorage.getItem('token');
             const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/auth/profile-photo`, {
                 method: 'POST',
                 headers: {

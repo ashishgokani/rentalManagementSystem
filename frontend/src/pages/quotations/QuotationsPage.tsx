@@ -6,7 +6,7 @@ import { useAuth } from '../../context/AuthContext';
 import { format } from 'date-fns';
 import { QuotationStatus } from '../../types';
 
-const statusColors: Record<QuotationStatus, string> = {
+const statusColors: Partial<Record<QuotationStatus, string>> = {
   draft: 'badge-neutral',
   sent: 'badge-info',
   confirmed: 'badge-success',
@@ -141,7 +141,7 @@ export default function QuotationsPage() {
                     <h3 className="font-semibold text-primary-900">{quotation.quotation_number}</h3>
                     <p className="text-sm text-primary-500">
                       {user?.role !== 'customer' && `Customer: ${quotation.customer_name || 'N/A'} • `}
-                      Created {format(new Date(quotation.created_at), 'MMM d, yyyy')}
+                      Created {format(new Date(quotation.createdAt), 'MMM d, yyyy')}
                     </p>
                   </div>
                 </div>
@@ -162,7 +162,7 @@ export default function QuotationsPage() {
               <div className="flex items-center gap-6">
                 <div className="text-right">
                   <p className="text-sm text-primary-500">Total Amount</p>
-                  <p className="text-xl font-bold text-primary-900">{formatPrice(quotation.total_amount)}</p>
+                  <p className="text-xl font-bold text-primary-900">{formatPrice(quotation.totalAmount)}</p>
                 </div>
                 <span className={`badge ${statusColors[quotation.status as QuotationStatus] || 'badge-neutral'} capitalize`}>
                   {quotation.status}

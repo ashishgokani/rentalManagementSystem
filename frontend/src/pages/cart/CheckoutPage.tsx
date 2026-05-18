@@ -113,26 +113,26 @@ export default function CheckoutPage() {
     setError(null);
 
     try {
-      // Get vendor_id from product (may be vendor_id or vendorId depending on source)
+      // Get vendorId from product (may be vendorId or vendorId depending on source)
       const product = items[0]?.product as any;
-      const vendorId = product?.vendor_id || product?.vendorId || '';
+      const vendorId = product?.vendorId || product?.vendorId || '';
 
       // Create order via API
       await ordersApi.createOrder({
-        vendor_id: vendorId,
+        vendorId: vendorId,
         notes: `Delivery: ${deliveryAddress.address}, ${deliveryAddress.city}, ${deliveryAddress.state} ${deliveryAddress.postalCode}. Payment: ${paymentMethod}`,
         lines: items.map(item => {
           const prod = item.product as any;
           return {
-            product_id: prod.id,
+            productId: prod.id,
             quantity: item.rentalPeriod.quantity,
             rental_period: {
               type: item.rentalPeriod.type,
-              start_date: item.rentalPeriod.startDate,
-              end_date: item.rentalPeriod.endDate,
+              startDate: item.rentalPeriod.startDate,
+              endDate: item.rentalPeriod.endDate,
               quantity: item.rentalPeriod.quantity,
             },
-            unit_price: item.unitPrice,
+            unitPrice: item.unitPrice,
             total_price: item.totalPrice,
           };
         }),

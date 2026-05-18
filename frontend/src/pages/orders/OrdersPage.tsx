@@ -216,7 +216,7 @@ export default function OrdersPage() {
                       <h3 className="font-semibold text-primary-900">{order.order_number}</h3>
                       <p className="text-sm text-primary-500">
                         {user?.role !== 'customer' && `Customer: ${order.customer_name || 'N/A'} • `}
-                        Created {format(new Date(order.created_at), 'MMM d, yyyy')}
+                        Created {format(new Date(order.createdAt), 'MMM d, yyyy')}
                       </p>
                     </div>
                   </div>
@@ -236,7 +236,7 @@ export default function OrdersPage() {
                     </div>
                     <div className="flex items-center gap-1.5 text-primary-600">
                       <DollarSign size={14} />
-                      Paid: {formatPrice(order.paid_amount || 0)} / {formatPrice(order.total_amount)}
+                      Paid: {formatPrice(order.paid_amount || 0)} / {formatPrice(order.totalAmount)}
                     </div>
                   </div>
                 </div>
@@ -245,7 +245,7 @@ export default function OrdersPage() {
                 <div className="flex items-center gap-6">
                   <div className="text-right">
                     <p className="text-sm text-primary-500">Total Amount</p>
-                    <p className="text-xl font-bold text-primary-900">{formatPrice(order.total_amount)}</p>
+                    <p className="text-xl font-bold text-primary-900">{formatPrice(order.totalAmount)}</p>
                   </div>
                   <span className={`badge ${statusColors[order.status as OrderStatus] || 'badge-neutral'} capitalize flex items-center gap-1`}>
                     {statusIcons[order.status as OrderStatus]}

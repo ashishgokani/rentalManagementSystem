@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export interface CouponValidationResponse {
     valid: boolean;
@@ -20,7 +20,7 @@ class PaymentApi {
     }
 
     private getHeaders(): HeadersInit {
-        const token = localStorage.getItem('access_token');
+        const token = localStorage.getItem('token');
         return {
             'Content-Type': 'application/json',
             ...(token ? { 'Authorization': `Bearer ${token}` } : {})

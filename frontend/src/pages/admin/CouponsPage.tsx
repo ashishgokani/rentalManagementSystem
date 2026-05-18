@@ -21,7 +21,7 @@ export default function CouponsPage() {
     per_user_limit: 1,
     valid_from: undefined,
     valid_until: undefined,
-    is_active: true
+    isActive: true
   });
   const [saving, setSaving] = useState(false);
 
@@ -34,7 +34,7 @@ export default function CouponsPage() {
       setLoading(true);
       const response = await adminApi.getCoupons({
         search: searchTerm || undefined,
-        is_active: filterActive
+        isActive: filterActive
       });
       setCoupons(response.coupons);
     } catch (error) {
@@ -57,7 +57,7 @@ export default function CouponsPage() {
       per_user_limit: 1,
       valid_from: undefined,
       valid_until: undefined,
-      is_active: true
+      isActive: true
     });
     setShowModal(true);
   };
@@ -75,7 +75,7 @@ export default function CouponsPage() {
       per_user_limit: coupon.per_user_limit,
       valid_from: coupon.valid_from,
       valid_until: coupon.valid_until,
-      is_active: coupon.is_active
+      isActive: coupon.isActive
     });
     setShowModal(true);
   };
@@ -180,7 +180,7 @@ export default function CouponsPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {coupons.map((coupon) => (
-            <div key={coupon.id} className={`card p-4 ${!coupon.is_active ? 'opacity-60' : ''}`}>
+            <div key={coupon.id} className={`card p-4 ${!coupon.isActive ? 'opacity-60' : ''}`}>
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <div className={`p-2 rounded-lg ${coupon.discount_type === 'PERCENTAGE' ? 'bg-blue-100' : 'bg-green-100'}`}>
@@ -192,14 +192,14 @@ export default function CouponsPage() {
                   </div>
                   <div>
                     <span className="font-mono font-bold text-primary-900">{coupon.code}</span>
-                    <span className={`ml-2 px-2 py-0.5 text-xs rounded-full ${coupon.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
-                      {coupon.is_active ? 'Active' : 'Inactive'}
+                    <span className={`ml-2 px-2 py-0.5 text-xs rounded-full ${coupon.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
+                      {coupon.isActive ? 'Active' : 'Inactive'}
                     </span>
                   </div>
                 </div>
                 <div className="flex items-center gap-1">
                   <button onClick={() => handleToggle(coupon.id)} className="p-1.5 hover:bg-primary-100 rounded" title="Toggle status">
-                    {coupon.is_active ? <ToggleRight size={18} className="text-green-600" /> : <ToggleLeft size={18} className="text-gray-400" />}
+                    {coupon.isActive ? <ToggleRight size={18} className="text-green-600" /> : <ToggleLeft size={18} className="text-gray-400" />}
                   </button>
                   <button onClick={() => handleEdit(coupon)} className="p-1.5 hover:bg-primary-100 rounded" title="Edit">
                     <Edit2 size={16} className="text-primary-600" />
@@ -372,12 +372,12 @@ export default function CouponsPage() {
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
-                    id="is_active"
-                    checked={formData.is_active}
-                    onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
+                    id="isActive"
+                    checked={formData.isActive}
+                    onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
                     className="w-4 h-4"
                   />
-                  <label htmlFor="is_active" className="text-sm text-primary-700">Active immediately</label>
+                  <label htmlFor="isActive" className="text-sm text-primary-700">Active immediately</label>
                 </div>
 
                 <div className="flex gap-3 pt-4">

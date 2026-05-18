@@ -1,239 +1,139 @@
-<div align="center">
+# RentPe - Enterprise Rental Management Platform
 
-# RentPe
-
-### Enterprise Rental Management Platform
-
-A modern, scalable rental management system built with FastAPI and React.  
-Streamline your rental operations with integrated payments, invoicing, and scheduling.
-
-[![Python](https://img.shields.io/badge/python-3.13+-3776ab.svg?style=flat-square&logo=python&logoColor=white)](https://www.python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![React](https://img.shields.io/badge/React-18+-61dafb.svg?style=flat-square&logo=react&logoColor=black)](https://reactjs.org)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5+-3178c6.svg?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-336791.svg?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org)
-[![License](https://img.shields.io/badge/License-MIT-green.svg?style=flat-square)](LICENSE)
-
-[Features](#features) • [Installation](#installation) • [Documentation](#api-documentation) • [Contributing](#contributing)
-
-</div>
+RentPe is a premium, modern, and highly feature-rich Enterprise Rental Management System built with a state-of-the-art tech stack. It supports roles for Customers, Vendors, and Administrators, providing out-of-the-box support for product catalogs, custom quotation handling, direct checkouts, auto-billing, transaction logs, and dynamic user wallets.
 
 ---
 
-## Demo
+## 🚀 Tech Stack
 
-<div align="center">
-
-[![RentPe Demo](https://drive.google.com/thumbnail?id=1MKjsFGA0lwCLa7TOiROyoCctdf8GmR4f&sz=w1280)](https://drive.google.com/file/d/1MKjsFGA0lwCLa7TOiROyoCctdf8GmR4f/view?usp=sharing)
-
-*Click the image above to watch the demo video*
-
-</div>
+- **Frontend:** React 18, TypeScript, TailwindCSS, Vite
+- **Backend (API):** Node.js, Express, Prisma ORM, PostgreSQL (REST APIs)
+- **Authentication:** Role-Based Access Control (RBAC), JWT, OAuth 2.0 (Google, GitHub)
+- **Services:** Nodemailer SMTP integration, Google Calendar synchronization
 
 ---
 
-## Overview
+## 📂 Project Structure
 
-RentPe is a comprehensive rental management solution designed for businesses that need to manage product rentals, customer relationships, and financial transactions in one unified platform. Built with modern technologies and best practices, it provides a robust foundation for rental operations of any scale.
-
-## Features
-
-### Core Functionality
-
-| Module | Capabilities |
-|--------|-------------|
-| **Authentication** | JWT-based auth, OAuth 2.0 (Google), role-based access control |
-| **Product Management** | Catalog management, inventory tracking, availability scheduling |
-| **Order Processing** | Cart system, quotations, order lifecycle management |
-| **Payments** | Razorpay integration, digital wallet, coupon/discount system |
-| **Invoicing** | Automated invoice generation, email delivery, payment tracking |
-| **Calendar** | Google Calendar sync, rental schedule management |
-| **Administration** | User management, analytics dashboard, transaction monitoring |
-
-### User Roles
-
-- **Customer** — Browse products, place orders, manage wallet
-- **Vendor** — List products, manage inventory, process orders
-- **Admin** — Full system access, user management, analytics
-
-## Technology Stack
-
-### Backend
-- **Framework:** FastAPI (Python 3.13+)
-- **Database:** PostgreSQL with SQLAlchemy ORM
-- **Migrations:** Alembic
-- **Authentication:** JWT + OAuth 2.0
-- **Payments:** Razorpay SDK
-
-### Frontend
-- **Framework:** React 18 with TypeScript
-- **Build Tool:** Vite
-- **Styling:** TailwindCSS
-- **Routing:** React Router v6
-
-## Project Structure
-
-```
-├── backend/
-│   ├── app/
-│   │   ├── api/          # Route handlers
-│   │   ├── core/         # Configuration
-│   │   ├── db/           # Database models & session
-│   │   ├── services/     # Business logic
-│   │   └── main.py       # Application entry
-│   ├── alembic/          # Database migrations
-│   └── requirements.txt
+```text
+├── frontend/             # React application (Vite + TypeScript)
+│   ├── src/
+│   │   ├── api/          # Dynamic API service callers (Auth, Wallet, Invoices, Orders)
+│   │   ├── pages/        # Dynamic views (Wallet, Invoices, Orders, Cart, Profile)
+│   │   └── context/      # Auth & Application State Contexts
+│   └── package.json
 │
-└── frontend/
+└── backend/              # Node.js + Express API Server (EXCLUDED IN GIT PUSH)
+    ├── prisma/           # PostgreSQL Schema and Migrations
     ├── src/
-    │   ├── api/          # API client layer
-    │   ├── components/   # Reusable components
-    │   ├── context/      # State management
-    │   ├── pages/        # Page components
-    │   └── App.tsx       # Route definitions
-    └── package.json
+    │   ├── controllers/  # Controllers (Auth, Product, Wallet, Invoice, Order)
+    │   ├── routes/       # REST API Endpoints
+    │   └── services/     # Core Business Services (Auth, Google Calendar, Nodemailer SMTP, Wallet)
+    └── server.js         # Entrypoint
 ```
-
-## Installation
-
-### Prerequisites
-
-- Python 3.13+
-- Node.js 18+
-- PostgreSQL 15+
-- Razorpay account
-- Google Cloud project (optional, for OAuth)
-
-### Backend Setup
-
-```bash
-# Clone repository
-git clone https://github.com/adwyte/odooxgcet81.git
-cd odooxgcet81/backend
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # Linux/macOS
-.\venv\Scripts\activate   # Windows
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Configure environment
-cp .env.example .env
-# Edit .env with your credentials
-
-# Run migrations
-alembic upgrade head
-
-# Start server
-uvicorn app.main:app --reload --port 8000
-```
-
-### Frontend Setup
-
-```bash
-cd frontend
-
-# Install dependencies
-npm install
-
-# Configure environment
-cp .env.example .env
-# Edit .env with your API URL
-
-# Start development server
-npm run dev
-```
-
-### Environment Variables
-
-**Backend (.env)**
-```env
-DATABASE_URL=postgresql://user:password@localhost:5432/rentpe
-SECRET_KEY=your-secret-key
-RAZORPAY_KEY_ID=rzp_xxx
-RAZORPAY_KEY_SECRET=xxx
-GOOGLE_CLIENT_ID=xxx
-GOOGLE_CLIENT_SECRET=xxx
-```
-
-**Frontend (.env)**
-```env
-VITE_API_URL=http://localhost:8000
-VITE_RAZORPAY_KEY_ID=rzp_xxx
-```
-
-## API Documentation
-
-Interactive API documentation is available when the backend is running:
-
-| Interface | URL |
-|-----------|-----|
-| Swagger UI | http://localhost:8000/docs |
-| ReDoc | http://localhost:8000/redoc |
-
-### Key Endpoints
-
-```
-POST   /api/auth/register          # User registration
-POST   /api/auth/login             # Authentication
-GET    /api/products               # Product listing
-POST   /api/orders                 # Create order
-POST   /api/payment/create-order   # Initialize payment
-POST   /api/payment/validate-coupon # Validate discount code
-GET    /api/wallet                 # Wallet balance
-GET    /api/admin/coupons          # Coupon management (admin)
-```
-
-## Database Schema
-
-```
-users ─────────┬──────> wallets ──────> wallet_transactions
-               │
-               ├──────> orders ───────> order_lines ──────> products
-               │
-               ├──────> quotations
-               │
-               └──────> invoices
-
-coupons (standalone)
-```
-
-## Deployment
-
-### Docker
-
-```bash
-docker-compose up -d
-```
-
-### Production Build
-
-```bash
-# Frontend
-cd frontend && npm run build
-
-# Backend (with Gunicorn)
-gunicorn app.main:app -w 4 -k uvicorn.workers.UvicornWorker
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/new-feature`)
-3. Commit changes (`git commit -m 'Add new feature'`)
-4. Push to branch (`git push origin feature/new-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
 
 ---
 
-<div align="center">
+## 🛠️ Setup Instructions (At another place / local machine)
 
-**[Documentation](https://github.com/adwyte/odooxgcet81/wiki)** • **[Report Bug](https://github.com/adwyte/odooxgcet81/issues)** • **[Request Feature](https://github.com/adwyte/odooxgcet81/issues)**
+Follow these exact steps to restore and launch the project on a new local machine:
 
-</div>
+### 1. Prerequisites
+- **Node.js:** Ensure Node.js (version 18 or above) is installed.
+- **PostgreSQL:** Ensure PostgreSQL database service is running locally.
+
+---
+
+### 2. Setting Up the Frontend
+1. Navigate to the `frontend` folder:
+   ```bash
+   cd frontend
+   ```
+2. Install node dependencies:
+   ```bash
+   npm install
+   ```
+3. Create the local `.env` environment variables file:
+   ```bash
+   # Create a .env file and write the backend endpoint
+   VITE_API_URL=http://localhost:5000
+   ```
+4. Start the frontend developer server:
+   ```bash
+   npm run dev
+   ```
+   *The client application will run successfully on `http://localhost:3000`.*
+
+---
+
+### 3. Setting Up the Backend (If running the Express server)
+1. Navigate to the `backend` folder:
+   ```bash
+   cd backend
+   ```
+2. Install express and prisma dependencies:
+   ```bash
+   npm install
+   ```
+3. Configure the database connector `.env` variables:
+   ```env
+   PORT=5000
+   DATABASE_URL="postgresql://<username>:<password>@localhost:5432/<dbname>?schema=public"
+   JWT_SECRET="your-jwt-secure-secret-key-string"
+   ```
+4. Perform database synchronization:
+   ```bash
+   npx prisma db push
+   ```
+5. Seed the database with initial user roles, products, wallets, and invoices:
+   ```bash
+   node seed.js
+   ```
+6. Start the Express API server:
+   ```bash
+   npm run dev
+   ```
+   *The REST API server will launch successfully on `http://localhost:5000`.*
+
+---
+
+## 📦 How to Push Code to GitHub (Excluding Backend)
+
+If you wish to push this project repository to GitHub **without including the backend folder**, do the following:
+
+### Step 1: Initialize Git and verify the `.gitignore`
+Make sure you are in the root directory `odooxgcet81/`.
+The `.gitignore` has been pre-configured with:
+```gitignore
+# Exclude backend
+backend/
+node_modules/
+dist/
+.env
+```
+
+### Step 2: Clear cache (if backend was previously tracked)
+If the backend folder was tracked in your git repository history before, run:
+```bash
+git rm -r --cached backend
+```
+
+### Step 3: Stage and Commit the files
+Add all other files (frontend code, README, configurations) and commit them:
+```bash
+git add .
+git commit -m "feat: complete node-express services integration and exclude backend from repository"
+```
+
+### Step 4: Add your remote GitHub Repository
+Link this repository to your remote GitHub repository (replace `<username>` and `<repository>` with your actual URL):
+```bash
+git remote add origin https://github.com/<username>/<repository>.git
+git branch -M main
+```
+
+### Step 5: Push to GitHub
+```bash
+git push -u origin main
+```
+*Your frontend and top-level configs are now safely pushed to your remote repository while leaving the backend folder perfectly ignored!*

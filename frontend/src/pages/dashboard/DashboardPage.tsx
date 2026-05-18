@@ -366,7 +366,7 @@ export default function DashboardPage() {
                           {order.order_number}
                         </span>
                         <span className="text-xs text-primary-400 block">
-                          {format(new Date(order.created_at), 'MMM d')}
+                          {format(new Date(order.createdAt), 'MMM d')}
                         </span>
                       </a>
                     </td>
@@ -388,7 +388,7 @@ export default function DashboardPage() {
                       )}
                     </td>
                     <td className="px-5 py-3 font-bold text-primary-900 text-sm">
-                      {formatPrice(order.total_amount)}
+                      {formatPrice(order.totalAmount)}
                     </td>
                     <td className="px-5 py-3">
                       <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide

@@ -1,52 +1,52 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export interface ApiError {
   detail: string;
 }
 
 export interface TokenResponse {
-  access_token: string;
-  refresh_token: string;
-  token_type: string;
+  token: string;
+  refreshToken: string;
+  tokenType: string;
   user: UserResponse;
 }
 
 // Request interfaces
 export interface UserUpdateData {
-  first_name?: string;
-  last_name?: string;
+  firstName?: string;
+  lastName?: string;
   phone?: string;
-  phone_number?: string;
-  company_name?: string;
-  business_category?: string;
+  phoneNumber?: string;
+  companyName?: string;
+  businessCategory?: string;
   gstin?: string;
   address?: string;
   city?: string;
   state?: string;
-  postal_code?: string;
+  postalCode?: string;
   country?: string;
 }
 
 export interface UserResponse {
   id: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone?: string;
   role: string;
-  company_name?: string;
-  business_category?: string;
+  companyName?: string;
+  businessCategory?: string;
   gstin?: string;
-  is_active: boolean;
-  referral_code?: string;
+  isActive: boolean;
+  referralCode?: string;
   address?: string;
   city?: string;
   state?: string;
-  postal_code?: string;
+  postalCode?: string;
   country?: string;
-  profile_photo?: string;
-  phone_number?: string;
-  is_calendar_connected?: boolean;
+  profilePhoto?: string;
+  phoneNumber?: string;
+  isCalendarConnected?: boolean;
 }
 
 export interface OTPResponse {
@@ -80,16 +80,16 @@ class AuthApi {
   }
 
   async register(data: {
-    first_name: string;
-    last_name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     phone: string;
     password: string;
-    company_name?: string;
-    business_category?: string;
+    companyName?: string;
+    businessCategory?: string;
     gstin?: string;
     role?: 'CUSTOMER' | 'VENDOR';
-    referral_code?: string;
+    referralCode?: string;
   }): Promise<TokenResponse> {
     const response = await fetch(`${this.baseUrl}/register`, {
       method: 'POST',
@@ -112,7 +112,7 @@ class AuthApi {
     const response = await fetch(`${this.baseUrl}/refresh`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refresh_token: refreshToken }),
+      body: JSON.stringify({ refreshToken: refreshToken }),
     });
     return this.handleResponse<TokenResponse>(response);
   }
@@ -164,7 +164,7 @@ class AuthApi {
 
   async updateProfile(data: UserUpdateData): Promise<UserResponse> {
     // Get token from storage - handled manually here since we don't have interceptors
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('token');
     if (!token) throw new Error('No access token found');
 
     const response = await fetch(`${this.baseUrl}/me`, {

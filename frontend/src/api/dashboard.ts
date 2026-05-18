@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 // Types
 export interface TopProduct {
@@ -33,12 +33,12 @@ export interface RecentOrder {
   customer_name: string;
   vendor_name: string;
   status: string;
-  total_amount: number;
-  created_at: string;
+  totalAmount: number;
+  createdAt: string;
 }
 
 export interface VendorPerformance {
-  vendor_id: string;
+  vendorId: string;
   vendor_name: string;
   total_orders: number;
   total_revenue: number;
@@ -54,7 +54,7 @@ export interface DailyStats {
 }
 
 export interface CategoryStats {
-  category_id: string;
+  categoryId: string;
   category_name: string;
   product_count: number;
   order_count: number;
@@ -70,7 +70,7 @@ class DashboardApi {
   }
 
   private getHeaders(): HeadersInit {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('token');
     return {
       'Content-Type': 'application/json',
       ...(token ? { 'Authorization': `Bearer ${token}` } : {})

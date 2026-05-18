@@ -53,11 +53,11 @@ export default function OrderPaymentPage() {
                     }
 
                     inv = await invoicesApi.createInvoice({
-                        order_id: order.id,
+                        orderId: order.id,
                         lines: order.lines.map(line => ({
                             description: `${line.product_name} x ${line.quantity} (${line.rental_period_type})`,
                             quantity: line.quantity,
-                            unit_price: line.unit_price,
+                            unitPrice: line.unitPrice,
                             total_price: line.total_price
                         })),
                         due_days: 7, // Default due date
@@ -101,7 +101,7 @@ export default function OrderPaymentPage() {
             return;
         }
 
-        const amountToPay = invoice.total_amount - invoice.paid_amount;
+        const amountToPay = invoice.totalAmount - invoice.paid_amount;
 
         if (paymentMethod === 'online') {
             try {
@@ -118,7 +118,7 @@ export default function OrderPaymentPage() {
                     name: "Rental Management System",
                     description: `Payment for Invoice #${invoice.invoice_number}`,
                     image: "/logo.png", // Add logo if available
-                    order_id: orderData.id,
+                    orderId: orderData.id,
                     handler: async function (response: any) {
                         try {
                             // Verify Payment on Backend (Optional but recommended, skipping for basic integration)
@@ -221,7 +221,7 @@ export default function OrderPaymentPage() {
         );
     }
 
-    const amountDue = invoice.total_amount - invoice.paid_amount;
+    const amountDue = invoice.totalAmount - invoice.paid_amount;
     const isFullyPaid = amountDue <= 0;
 
     if (isFullyPaid) {
@@ -242,7 +242,7 @@ export default function OrderPaymentPage() {
                 </button>
                 <div>
                     <h1 className="text-2xl font-bold text-primary-900">Make Payment</h1>
-                    <p className="text-primary-500">Order #{invoice.order_id.slice(0, 8)}...</p>
+                    <p className="text-primary-500">Order #{invoice.orderId.slice(0, 8)}...</p>
                 </div>
             </div>
 
@@ -351,7 +351,7 @@ export default function OrderPaymentPage() {
                         <div className="space-y-3 mb-6">
                             <div className="flex justify-between text-primary-100">
                                 <span>Order Total</span>
-                                <span>{formatPrice(invoice.total_amount)}</span>
+                                <span>{formatPrice(invoice.totalAmount)}</span>
                             </div>
                             {invoice.paid_amount > 0 && (
                                 <div className="flex justify-between text-green-300">

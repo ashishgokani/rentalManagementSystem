@@ -397,7 +397,7 @@ export default function WalletPage() {
                     </p>
                     <div className="flex items-center justify-end gap-1 text-sm text-primary-500">
                       {getStatusIcon(txn.status)}
-                      <span>{format(new Date(txn.created_at), 'MMM d, h:mm a')}</span>
+                      <span>{format(new Date(txn.createdAt), 'MMM d, h:mm a')}</span>
                     </div>
                   </div>
                 </div>

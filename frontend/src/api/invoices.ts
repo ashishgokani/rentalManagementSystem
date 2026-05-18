@@ -1,15 +1,15 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 // Types
 export interface InvoiceLineCreate {
   description: string;
   quantity: number;
-  unit_price: number;
+  unitPrice: number;
   total_price: number;
 }
 
 export interface InvoiceCreate {
-  order_id: string;
+  orderId: string;
   lines: InvoiceLineCreate[];
   due_days?: number;
   notes?: string;
@@ -25,7 +25,7 @@ export interface InvoiceLine {
   id: string;
   description: string;
   quantity: number;
-  unit_price: number;
+  unitPrice: number;
   total_price: number;
 }
 
@@ -35,26 +35,26 @@ export interface Payment {
   method: string;
   status: string;
   transaction_id?: string;
-  created_at: string;
+  createdAt: string;
 }
 
 export interface Invoice {
   id: string;
   invoice_number: string;
-  order_id: string;
-  customer_id: string;
+  orderId: string;
+  customerId: string;
   customer_name: string;
   customer_gstin?: string;
   status: string;
   lines: InvoiceLine[];
   subtotal: number;
   tax_rate: number;
-  tax_amount: number;
-  total_amount: number;
+  taxAmount: number;
+  totalAmount: number;
   paid_amount: number;
   due_date?: string;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 class InvoicesApi {
@@ -65,7 +65,7 @@ class InvoicesApi {
   }
 
   private getHeaders(): HeadersInit {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('token');
     return {
       'Content-Type': 'application/json',
       ...(token ? { 'Authorization': `Bearer ${token}` } : {})

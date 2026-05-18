@@ -1,24 +1,24 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 // Types
 export interface RentalPeriodSelection {
   type: string;
-  start_date: string;
-  end_date: string;
+  startDate: string;
+  endDate: string;
   quantity: number;
 }
 
 export interface OrderLineCreate {
-  product_id: string;
+  productId: string;
   quantity: number;
   rental_period: RentalPeriodSelection;
-  unit_price: number;
+  unitPrice: number;
   total_price: number;
 }
 
 export interface OrderCreate {
-  quotation_id?: string;
-  vendor_id: string;
+  quotationId?: string;
+  vendorId: string;
   lines: OrderLineCreate[];
   security_deposit?: number;
   notes?: string;
@@ -26,39 +26,39 @@ export interface OrderCreate {
 
 export interface OrderLine {
   id: string;
-  product_id: string;
+  productId: string;
   product_name: string;
   quantity: number;
   rental_period_type: string;
   rental_start_date: string;
   rental_end_date: string;
-  unit_price: number;
+  unitPrice: number;
   total_price: number;
 }
 
 export interface Order {
   id: string;
   order_number: string;
-  quotation_id?: string;
-  customer_id: string;
+  quotationId?: string;
+  customerId: string;
   customer_name: string;
-  vendor_id: string;
+  vendorId: string;
   vendor_name: string;
   status: string;
   lines: OrderLine[];
   subtotal: number;
   tax_rate: number;
-  tax_amount: number;
+  taxAmount: number;
   security_deposit: number;
-  total_amount: number;
+  totalAmount: number;
   paid_amount: number;
   rental_start_date?: string;
   rental_end_date?: string;
   pickup_date?: string;
   return_date?: string;
   late_return_fee: number;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface OrderUpdate {
@@ -77,7 +77,7 @@ class OrdersApi {
   }
 
   private getHeaders(): HeadersInit {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('token');
     return {
       'Content-Type': 'application/json',
       ...(token ? { 'Authorization': `Bearer ${token}` } : {})

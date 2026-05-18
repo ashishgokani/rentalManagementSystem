@@ -131,21 +131,21 @@ export default function SettingsPage() {
       }
 
       const updateData: any = {
-        first_name: profileData.firstName,
-        last_name: profileData.lastName,
-        phone_number: profileData.phone,
+        firstName: profileData.firstName,
+        lastName: profileData.lastName,
+        phoneNumber: profileData.phone,
         phone: profileData.phone,
 
         address: user?.role === 'customer' ? profileData.address : companyData.address,
         city: user?.role === 'customer' ? profileData.city : companyData.city,
         state: user?.role === 'customer' ? profileData.state : companyData.state,
-        postal_code: user?.role === 'customer' ? profileData.postalCode : companyData.postalCode,
+        postalCode: user?.role === 'customer' ? profileData.postalCode : companyData.postalCode,
         country: user?.role === 'customer' ? 'India' : companyData.country,
       };
 
       if (user?.role === 'vendor') {
-        updateData.company_name = companyData.companyName;
-        updateData.business_category = companyData.businessCategory;
+        updateData.companyName = companyData.companyName;
+        updateData.businessCategory = companyData.businessCategory;
         updateData.gstin = companyData.gstin;
       }
 
@@ -269,7 +269,7 @@ export default function SettingsPage() {
                       formData.append('file', file);
 
                       try {
-                        const token = localStorage.getItem('access_token');
+                        const token = localStorage.getItem('token');
                         const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/api/auth/profile-photo`, {
                           method: 'POST',
                           headers: {

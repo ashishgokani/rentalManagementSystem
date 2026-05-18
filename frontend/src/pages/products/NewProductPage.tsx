@@ -97,7 +97,7 @@ export default function NewProductPage() {
         name: name.trim(),
         description: description.trim() || undefined,
         images: images.length > 0 ? images : undefined,
-        category_id: categoryId || undefined,
+        categoryId: categoryId || undefined,
         is_rentable: isRentable,
         rental_pricing: Object.keys(rentalPricing).length > 0 ? rentalPricing : undefined,
         cost_price: costPrice || undefined,

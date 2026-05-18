@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 class CalendarApi {
     private baseUrl: string;
@@ -8,7 +8,7 @@ class CalendarApi {
     }
 
     private getHeaders(): HeadersInit {
-        const token = localStorage.getItem('access_token');
+        const token = localStorage.getItem('token');
         return {
             'Content-Type': 'application/json',
             ...(token ? { 'Authorization': `Bearer ${token}` } : {})
@@ -43,7 +43,7 @@ class CalendarApi {
         const response = await fetch(`${this.baseUrl}/sync-order`, {
             method: 'POST',
             headers: this.getHeaders(),
-            body: JSON.stringify({ order_id: orderId })
+            body: JSON.stringify({ orderId: orderId })
         });
         return this.handleResponse<{ message: string; link?: string; links?: string[] }>(response);
     }

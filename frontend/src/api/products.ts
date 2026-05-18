@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 // Types
 export interface RentalPricing {
@@ -18,7 +18,7 @@ export interface Product {
   description?: string;
   images: string[];
   category?: string;
-  category_id?: string;
+  categoryId?: string;
   is_rentable: boolean;
   rental_pricing: RentalPricing;
   cost_price: number;
@@ -27,25 +27,25 @@ export interface Product {
   reserved_quantity: number;
   available_quantity: number;
   is_published: boolean;
-  vendor_id: string;
+  vendorId: string;
   vendor_name: string;
   attributes: ProductAttribute[];
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Category {
   id: string;
   name: string;
   description?: string;
-  is_active: boolean;
+  isActive: boolean;
 }
 
 export interface ProductCreateData {
   name: string;
   description?: string;
   images?: string[];
-  category_id?: string;
+  categoryId?: string;
   is_rentable?: boolean;
   rental_pricing?: RentalPricing;
   cost_price?: number;
@@ -63,7 +63,7 @@ class ProductsApi {
   }
 
   private getHeaders(): HeadersInit {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('token');
     return {
       'Content-Type': 'application/json',
       ...(token ? { 'Authorization': `Bearer ${token}` } : {})
@@ -100,7 +100,7 @@ class ProductsApi {
     search?: string;
     category?: string;
     is_published?: boolean;
-    vendor_id?: string;
+    vendorId?: string;
     sort_by?: string;
     skip?: number;
     limit?: number;
@@ -109,7 +109,7 @@ class ProductsApi {
     if (params?.search) searchParams.append('search', params.search);
     if (params?.category) searchParams.append('category', params.category);
     if (params?.is_published !== undefined) searchParams.append('is_published', String(params.is_published));
-    if (params?.vendor_id) searchParams.append('vendor_id', params.vendor_id);
+    if (params?.vendorId) searchParams.append('vendorId', params.vendorId);
     if (params?.sort_by) searchParams.append('sort_by', params.sort_by);
     if (params?.skip) searchParams.append('skip', String(params.skip));
     if (params?.limit) searchParams.append('limit', String(params.limit));
@@ -155,7 +155,7 @@ class ProductsApi {
   }
 
   async uploadImage(file: File): Promise<{ url: string; filename: string }> {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('token');
     const formData = new FormData();
     formData.append('file', file);
 

@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 // Types
 export interface Wallet {
@@ -6,9 +6,9 @@ export interface Wallet {
   user_id: string;
   balance: number;
   currency: string;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface WalletTransaction {
@@ -24,7 +24,7 @@ export interface WalletTransaction {
   description?: string;
   payment_method?: string;
   external_reference?: string;
-  created_at: string;
+  createdAt: string;
 }
 
 export interface WalletSummary {
@@ -53,7 +53,7 @@ class WalletApi {
   }
 
   private getHeaders(): HeadersInit {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('token');
     return {
       'Content-Type': 'application/json',
       ...(token ? { 'Authorization': `Bearer ${token}` } : {})

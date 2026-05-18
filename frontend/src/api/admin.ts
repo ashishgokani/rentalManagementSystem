@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export interface DashboardStats {
   total_users: number;
@@ -11,15 +11,15 @@ export interface DashboardStats {
 
 export interface UserListItem {
   id: string;
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   role: string;
-  company_name: string | null;
-  business_category: string | null;
+  companyName: string | null;
+  businessCategory: string | null;
   gstin: string | null;
-  is_active: boolean;
-  created_at: string;
+  isActive: boolean;
+  createdAt: string;
 }
 
 export interface PaginatedResponse<T> {
@@ -31,13 +31,13 @@ export interface PaginatedResponse<T> {
 }
 
 export interface AdminUserCreate {
-  first_name: string;
-  last_name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   role: 'ADMIN' | 'VENDOR' | 'CUSTOMER';
-  company_name?: string;
-  business_category?: string;
+  companyName?: string;
+  businessCategory?: string;
   gstin?: string;
 }
 
@@ -45,7 +45,7 @@ class AdminApiClient {
   private baseUrl = `${API_BASE_URL}/api/admin`;
 
   private getAuthHeaders(): HeadersInit {
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('token');
     return {
       'Content-Type': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -74,14 +74,14 @@ class AdminApiClient {
     per_page?: number;
     search?: string;
     role?: string;
-    is_active?: boolean;
+    isActive?: boolean;
   } = {}): Promise<PaginatedResponse<UserListItem>> {
     const searchParams = new URLSearchParams();
     if (params.page) searchParams.set('page', String(params.page));
     if (params.per_page) searchParams.set('per_page', String(params.per_page));
     if (params.search) searchParams.set('search', params.search);
     if (params.role) searchParams.set('role', params.role);
-    if (params.is_active !== undefined) searchParams.set('is_active', String(params.is_active));
+    if (params.isActive !== undefined) searchParams.set('isActive', String(params.isActive));
 
     const response = await fetch(`${this.baseUrl}/users?${searchParams}`, {
       headers: this.getAuthHeaders(),
@@ -109,7 +109,7 @@ class AdminApiClient {
     const response = await fetch(`${this.baseUrl}/users/${userId}/status`, {
       method: 'PATCH',
       headers: this.getAuthHeaders(),
-      body: JSON.stringify({ is_active: isActive }),
+      body: JSON.stringify({ isActive: isActive }),
     });
     return this.handleResponse<UserListItem>(response);
   }
@@ -136,13 +136,13 @@ class AdminApiClient {
     page?: number;
     per_page?: number;
     search?: string;
-    is_active?: boolean;
+    isActive?: boolean;
   } = {}): Promise<PaginatedResponse<UserListItem>> {
     const searchParams = new URLSearchParams();
     if (params.page) searchParams.set('page', String(params.page));
     if (params.per_page) searchParams.set('per_page', String(params.per_page));
     if (params.search) searchParams.set('search', params.search);
-    if (params.is_active !== undefined) searchParams.set('is_active', String(params.is_active));
+    if (params.isActive !== undefined) searchParams.set('isActive', String(params.isActive));
 
     const response = await fetch(`${this.baseUrl}/vendors?${searchParams}`, {
       headers: this.getAuthHeaders(),

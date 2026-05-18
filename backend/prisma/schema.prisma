@@ -1,0 +1,278 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+enum UserRole {
+  CUSTOMER
+  VENDOR
+  ADMIN
+}
+
+model User {
+  id                  String       @id @default(uuid()) @db.Uuid
+  firstName           String
+  lastName            String
+  email               String       @unique
+  phone               String?
+  passwordHash        String
+  role                UserRole
+  
+  companyName         String?
+  businessCategory    String?
+  gstin               String?
+  address             String?
+  city                String?
+  state               String?
+  postalCode          String?
+  country             String?      @default("India")
+  
+  isActive            Boolean      @default(true)
+  profilePhoto        String?
+  googleRefreshToken  String?
+  createdAt           DateTime     @default(now())
+  
+  referralCode        String?      @unique @db.VarChar(8)
+  referredBy          String?      @db.Uuid
+  referralUsed        Boolean      @default(false)
+
+  // Relationships
+  referrer            User?        @relation("Referrals", fields: [referredBy], references: [id])
+  referredUsers       User[]       @relation("Referrals")
+  wallet              Wallet?
+  products            Product[]
+  orders              Order[]      @relation("CustomerOrders")
+  quotations          Quotation[]
+  invoices            Invoice[]
+}
+
+model Wallet {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @unique @db.Uuid
+  balance   Float    @default(0.0)
+  currency  String   @default("INR")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions WalletTransaction[]
+}
+
+enum TransactionType {
+  CREDIT
+  DEBIT
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+model WalletTransaction {
+  id                String            @id @default(uuid()) @db.Uuid
+  walletId          String            @db.Uuid
+  transactionType   TransactionType
+  amount            Float
+  balanceBefore     Float
+  balanceAfter      Float
+  status            TransactionStatus @default(COMPLETED)
+  referenceType     String?
+  referenceId       String?           @db.Uuid
+  description       String?
+  paymentMethod     String?
+  externalReference String?
+  createdAt         DateTime          @default(now())
+
+  wallet            Wallet            @relation(fields: [walletId], references: [id], onDelete: Cascade)
+}
+
+model Category {
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String    @unique
+  description String?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  products    Product[]
+}
+
+model Product {
+  id                  String   @id @default(uuid()) @db.Uuid
+  vendorId            String   @db.Uuid
+  categoryId          String?  @db.Uuid
+  name                String
+  description         String?
+  images              Json?    // Array of image URLs
+  isRentable          Boolean  @default(true)
+  rentalPriceHourly   Float?
+  rentalPriceDaily    Float?
+  rentalPriceWeekly   Float?
+  costPrice           Float    @default(0.0)
+  salesPrice          Float    @default(0.0)
+  quantityOnHand      Int      @default(0)
+  reservedQuantity    Int      @default(0)
+  isPublished         Boolean  @default(false)
+  attributes          Json?    // Array of {name, value} objects
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  vendor      User            @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  category    Category?       @relation(fields: [categoryId], references: [id])
+  quotationLines QuotationLine[]
+  orderLines     OrderLine[]
+}
+
+enum QuotationStatus {
+  DRAFT
+  SENT
+  CONFIRMED
+  CANCELLED
+}
+
+model Quotation {
+  id          String          @id @default(uuid()) @db.Uuid
+  customerId  String          @db.Uuid
+  status        QuotationStatus @default(DRAFT)
+  subtotal      Float           @default(0.0)
+  taxRate       Float           @default(18.0)
+  taxAmount     Float           @default(0.0)
+  totalAmount   Float           @default(0.0)
+  notes         String?
+  validUntil    DateTime?
+  createdAt     DateTime        @default(now())
+  
+  customer    User            @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  items       QuotationLine[]
+  orders      Order[]
+}
+
+model QuotationLine {
+  id          String    @id @default(uuid()) @db.Uuid
+  quotationId String    @db.Uuid
+  productId   String    @db.Uuid
+  productName      String?
+  quantity         Int
+  rentalPeriodType String    @default("daily")
+  startDate        DateTime?
+  endDate          DateTime?
+  unitPrice        Float
+  totalPrice       Float     @default(0.0)
+
+  quotation   Quotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+  product     Product   @relation(fields: [productId], references: [id])
+}
+
+enum OrderStatus {
+  DRAFT
+  CONFIRMED
+  ACTIVE
+  RETURNED
+  COMPLETED
+  CANCELLED
+}
+
+model Order {
+  id          String      @id @default(uuid()) @db.Uuid
+  customerId  String      @db.Uuid
+  quotationId String?     @db.Uuid
+  status      OrderStatus @default(DRAFT)
+  totalAmount Float
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  customer    User        @relation("CustomerOrders", fields: [customerId], references: [id], onDelete: Cascade)
+  quotation   Quotation?  @relation(fields: [quotationId], references: [id])
+  items       OrderLine[]
+  invoices    Invoice[]
+}
+
+model OrderLine {
+  id        String   @id @default(uuid()) @db.Uuid
+  orderId   String   @db.Uuid
+  productId String   @db.Uuid
+  quantity  Int
+  startDate DateTime
+  endDate   DateTime
+  unitPrice Float
+
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id])
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PARTIAL
+  PAID
+  CANCELLED
+}
+
+model Invoice {
+  id            String        @id @default(uuid()) @db.Uuid
+  invoiceNumber String        @unique
+  orderId       String        @db.Uuid
+  customerId    String        @db.Uuid
+  status        InvoiceStatus @default(DRAFT)
+  subtotal      Float         @default(0.0)
+  taxRate       Float         @default(18.0)
+  taxAmount     Float         @default(0.0)
+  totalAmount   Float         @default(0.0)
+  paidAmount    Float         @default(0.0)
+  dueDays       Int           @default(30)
+  notes         String?
+  issuedAt      DateTime      @default(now())
+  dueDate       DateTime?
+  updatedAt     DateTime      @updatedAt
+
+  order         Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  customer      User          @relation(fields: [customerId], references: [id])
+  lines         InvoiceLine[]
+  payments      Payment[]
+}
+
+model InvoiceLine {
+  id          String   @id @default(uuid()) @db.Uuid
+  invoiceId   String   @db.Uuid
+  description String
+  quantity    Int      @default(1)
+  unitPrice   Float
+  totalPrice  Float
+
+  invoice     Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+}
+
+enum PaymentMethod {
+  ONLINE
+  CARD
+  BANK_TRANSFER
+  CASH
+  WALLET
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+model Payment {
+  id            String        @id @default(uuid()) @db.Uuid
+  invoiceId     String        @db.Uuid
+  amount        Float
+  method        PaymentMethod
+  status        PaymentStatus @default(PENDING)
+  transactionId String?
+  createdAt     DateTime      @default(now())
+
+  invoice       Invoice       @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+}

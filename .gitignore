@@ -222,5 +222,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Exclude backend as requested by the user
-backend/
+# Exclude Python backend as requested
+python_backend/
+
+# JS Backend specific ignores
+backend/node_modules/
+backend/.env
+backend/uploads/
